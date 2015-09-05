@@ -1,5 +1,13 @@
 <ion-view view-title="History">
   <ion-content>
-    <h1>History</h1>
+    <ion-list>
+      <ion-item ng-repeat="order in orderlist" href="#/app/history/{{order.id}}">
+        <div style="display: inline-block; width: 100%;">
+			<span style="float:left">07/01/15</span>
+			<span style="float:right">$88.88</span>
+		</div>
+		<div>San Francisco</div>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

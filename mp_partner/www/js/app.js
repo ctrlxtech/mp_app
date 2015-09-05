@@ -51,11 +51,22 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       url: '/history',
       views: {
         'menuContent': {
-          templateUrl: 'templates/history.html'
-        }
+          templateUrl: 'templates/history.html',
+		  controller: 'HistoryCtrl'
+  	    }
       }
     })
 
+    .state('app.order', {
+      url: '/history/:orderId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/playlist.html',
+		  controller: 'HistoryCtrl'
+        }
+      }
+    })
+	
 	.state('app.schedule', {
       url: '/schedule',
       views: {
@@ -80,7 +91,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     views: {
       'menuContent': {
         templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
+        controller: 'DetailCtrl'
       }
     }
   });
