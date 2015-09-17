@@ -1,5 +1,7 @@
 <ion-view view-title="Schedule">
   <ion-content>
-    <h1>Schedule</h1>
+	<ion-toggle ng-repeat="day in weekdays" ng-model="day.toggle">
+		<day-schedule info="weekdays[$index]"></day-schedule>
+	</ion-toggle>
   </ion-content>
 </ion-view>
