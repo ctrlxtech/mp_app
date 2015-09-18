@@ -1,6 +1,6 @@
 angular.module('starter.controllers')
 
-.controller('ScheduleCtrl', function($scope) {
+.controller('ScheduleCtrl', function($scope, $state, $stateParams) {
   $scope.weekdays = [ 
     { 
       day: 'Monday',
@@ -26,5 +26,12 @@ angular.module('starter.controllers')
 	  ],
       toggle: false 
     }
-  ];	
+  ];
+  $scope.editmode = function() {
+    $state.go('app.editschedule');
+  };
+  $scope.saveedit = function() {
+    $state.go('app.schedule');
+  };
+  $scope.dayId = $stateParams.dayId;
 });

@@ -1,0 +1,15 @@
+﻿<ion-view view-title="Edit Schedule">
+  <ion-content>
+	<ion-list>
+		<ion-item ng-repeat="interval in weekdays[dayId].intervals" class="item-remove-animate">
+			<div style="text-align: center;">
+				<span class="time">{{interval.starttime}}</span>&nbsp;-&nbsp;<span class="time">{{interval.endtime}}</span>
+				<input type="time" id="time" value="{{interval.starttime | limitTo:5}}">
+			</div>
+			<ion-option-button class="button-assertive" ng-click="">
+			  Delete
+			</ion-option-button>
+		</ion-item>
+	</ion-list>
+  </ion-content>
+</ion-view>

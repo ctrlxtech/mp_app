@@ -73,10 +73,10 @@ angular.module('starter.controllers', [])
 })
 
 .controller('DetailCtrl', function ($scope, $stateParams) {
-    $scope.playlistId = $stateParams.playlistId;
+    $scope.orderId = $stateParams.orderId;
 })
 
-.controller('HistoryCtrl', function($scope) {
+.controller('HistoryCtrl', function($scope, $state) {
   $scope.orderlist = [
     { title: '1', id: 1 },
     { title: '2', id: 2 },

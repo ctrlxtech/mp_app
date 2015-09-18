@@ -2,3 +2,12 @@
 .container {
 	padding: 5px;
 }
+
+.toggle-middle .handle{
+	top: inherit;
+}
+
+.toggle-middle .toggle{
+	margin: 0;
+	top: 0px;
+}

@@ -22,7 +22,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
  
   $stateProvider
   .state('login', {
@@ -61,8 +61,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       url: '/history/:orderId',
       views: {
         'menuContent': {
-          templateUrl: 'templates/playlist.html',
-		  controller: 'HistoryCtrl'
+          templateUrl: 'templates/orderDetails.html',
+		  controller: 'DetailCtrl'
         }
       }
     })
@@ -76,6 +76,26 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
+
+	.state('app.editschedule', {
+      url: '/editschedule',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/schedule-edit.html',
+		  controller: 'ScheduleCtrl'
+        }
+      }
+    })
+	
+    .state('app.edittime', {
+      url: '/editschedule/:dayId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/editTime.html',
+		  controller: 'ScheduleCtrl'
+        }
+      }
+    })
 	
    .state('app.playlists', {
       url: '/playlists',
@@ -85,17 +105,10 @@ angular.module('starter', ['ionic', 'starter.controllers'])
           controller: 'PlaylistsCtrl'
         }
       }
-    })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'DetailCtrl'
-      }
-    }
-  });
+    });
+	
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
+  
+  $ionicConfigProvider.backButton.previousTitleText(false);
 });
