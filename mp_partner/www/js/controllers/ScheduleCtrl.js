@@ -31,7 +31,17 @@ angular.module('starter.controllers')
     $state.go('app.editschedule');
   };
   $scope.saveedit = function() {
-    $state.go('app.schedule');
+    $state.go('app.editschedule');
   };
+  
+  $scope.addTimeslot = function(dayId){
+	var newTime = {	starttime:'00:00 am', endtime: '00:00 am' };
+	$scope.weekdays[dayId].intervals.push(newTime);
+  };
+  
+  $scope.delTimeslot = function(dayId, index){
+	$scope.weekdays[dayId].intervals.splice(index,1);
+  };
+  
   $scope.dayId = $stateParams.dayId;
 });

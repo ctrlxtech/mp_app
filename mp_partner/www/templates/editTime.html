@@ -1,15 +1,32 @@
 ﻿<ion-view view-title="Edit Schedule">
+    <ion-nav-buttons side="right">
+      <button class="button button-icon button-clear" ng-click="saveedit()">
+        Save
+      </button>
+    </ion-nav-buttons>
   <ion-content>
 	<ion-list>
-		<ion-item ng-repeat="interval in weekdays[dayId].intervals" class="item-remove-animate">
+		<ion-item ng-repeat="interval in weekdays[dayId].intervals" class="item-remove-animate item-edittime">
 			<div style="text-align: center;">
 				<span class="time">{{interval.starttime}}</span>&nbsp;-&nbsp;<span class="time">{{interval.endtime}}</span>
-				<input type="time" id="time" value="{{interval.starttime | limitTo:5}}">
+				<div>
+					<input type="time" id="starttime" value="{{interval.starttime | limitTo:5}}" style="display: inline-block;">
+					<input type="time" id="endtime" value="{{interval.endtime | limitTo:5}}" style="display: inline-block;">
+				</div>
 			</div>
-			<ion-option-button class="button-assertive" ng-click="">
+			<ion-option-button class="button-assertive" ng-click="delTimeslot(dayId, $index)">
 			  Delete
 			</ion-option-button>
 		</ion-item>
+
+
 	</ion-list>
   </ion-content>
+	<div class="bar bar-footer" style="padding: 0;">
+		<div class="button-bar">
+			<button class="button button-large" ng-click="addTimeslot(dayId)" style="font-size: 16px;">
+				Add another slot
+			</button>
+		</div>
+	</div>
 </ion-view>

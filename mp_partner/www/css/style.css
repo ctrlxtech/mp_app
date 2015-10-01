@@ -7,7 +7,15 @@
 	top: inherit;
 }
 
+.toggle-small .handle{
+	margin-top: -3px;
+}
+
 .toggle-middle .toggle{
 	margin: 0;
-	top: 0px;
+	top: 0px !important;
+}
+
+.item-edittime .item-content{
+	padding:16px;
 }
