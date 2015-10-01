@@ -11,3 +11,7 @@
 	margin: 0;
 	top: 0px;
 }
+
+.item-edittime .item-content{
+	padding:16px;
+}
