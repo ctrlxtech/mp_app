@@ -39,6 +39,17 @@ angular.module('starter.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
+
+  // Perform the checkIn action when the user submits the checkIn form
+  $scope.doCheckIn = function() {
+    console.log('Doing checkIn', $scope.checkInData);
+
+    // Simulate a checkIn delay. Remove this and replace with your checkIn
+    // code if using a login system
+    $timeout(function() {
+      $scope.closeLogin();
+    }, 1000);
+  };
 })
 
 .controller('LoginCtrl', function($scope, $timeout, $state) {
@@ -52,7 +63,22 @@ angular.module('starter.controllers', [])
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
-      $state.go('app.profile');
+      $state.go('app.home');
+    }, 1000);
+  };
+  
+})
+
+.controller('CheckInCtrl', function($scope, $timeout, $state) {
+
+  // Form data for the login modal
+  $scope.checkInData = {};
+  
+  $scope.doCheckIn = function() {
+    console.log('Doing login', $scope.checkInData);
+
+    $timeout(function() {
+      $state.go('app.working');
     }, 1000);
   };
   
