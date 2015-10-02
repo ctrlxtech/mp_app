@@ -80,7 +80,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       views: {
         'menuContent': {
           templateUrl: 'templates/orderDetails.html',
-		  controller: 'DetailCtrl'
+		  controller: 'HistoryCtrl'
         }
       }
     })

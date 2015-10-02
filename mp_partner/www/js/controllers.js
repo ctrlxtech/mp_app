@@ -102,10 +102,31 @@ angular.module('starter.controllers', [])
     $scope.orderId = $stateParams.orderId;
 })
 
-.controller('HistoryCtrl', function($scope, $state) {
+.controller('HistoryCtrl', function($scope, $stateParams) {
   $scope.orderlist = [
-    { title: '1', id: 1 },
-    { title: '2', id: 2 },
-    { title: '3', id: 3 }
+    { 
+		id: 1,
+		date: '1442370600000',
+		duration: 60,
+		type: 'Swedish',
+		city: 'Mountain View',
+		state: 'CA',
+		address: '123 Castro St',
+		total: 85.12,
+		status: 'Done'
+	},
+    { 
+		id: 2,
+		date: '1442527200000',
+		duration: 90,
+		type: 'Deep Tissue',
+		city: 'San Francisco',
+		state: 'CA',
+		address: '456 Market St',
+		total: 117.23,
+		status: 'Done'
+	}
   ];
+  
+  $scope.orderId = $stateParams.orderId;
 });

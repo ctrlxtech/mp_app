@@ -1,6 +1,24 @@
-<ion-view view-title="Playlist">
+<ion-view view-title="Order Details">
   <ion-content>
-    <h2>Order Details</h2>
-	<div>{{orderId}}</div>
+    <div style="display: block; width: 100%; padding:10px; font-size: initial; color: #444; line-height:24px;">
+		<div>
+			<span style="">Date: </span> <span style="float:right">{{orderlist[orderId-1].date | date: 'fullDate'}}</span>
+		</div>
+		<div>
+			<span style="">Time: </span> <span style="float:right">{{orderlist[orderId-1].date | date: 'hh:mm a'}}</span>
+		</div>
+		<div>
+			<span style="">Address: </span> <span style="float:right">{{orderlist[orderId-1].address}}</span>
+		</div>
+		<div>
+			<span style="">City: </span> <span style="float:right">{{orderlist[orderId-1].city}}, {{orderlist[orderId-1].state}}</span>
+		</div>
+		<div>
+			<span style="">Total: </span> <span style="float:right">${{orderlist[orderId-1].total}}</span>
+		</div>
+		<div>
+			<span style="">Status: </span> <span style="float:right">{{orderlist[orderId-1].status}}</span>
+		</div>
+	</div>
   </ion-content>
 </ion-view>
