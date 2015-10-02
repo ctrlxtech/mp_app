@@ -1,5 +1,76 @@
 angular.module('starter.controllers', [])
 
+.controller('ProfileCtrl', function($scope, $rootScope, $ionicUser, $ionicPush, $log, $window, restful_send, $http) {
+  // Identifies a user with the Ionic User service
+  $scope.doGetData = function() {
+    $window.console.log("enter getData");
+    $window.console.log($scope.token);
+    $http({
+      method: 'POST',
+      url: "https://push.ionic.io/api/v1/push",
+      data: {
+        "tokens":[
+          $scope.token
+        ],
+        "notification":{
+          "alert":"Hello World!",
+        }
+      },
+      headers: {  'Content-Type': 'application/json' ,
+                  'X-Ionic-Application-Id': "ce70fa55",
+                  "Authorization": btoa('d03a2dc3aa95b5884312c4102b731f54fc70a9d2a8479fd9' + ":" + "")
+              }
+    });
+
+  };
+  $scope.identifyUser = function() {
+    $log.info('Ionic User: Identifying with Ionic User service');
+
+    var user = $ionicUser.get();
+    if(!user.user_id) {
+      // Set your user_id here, or generate a random one.
+      user.user_id = $ionicUser.generateGUID();
+    };
+
+    // Add some metadata to your user object.
+    angular.extend(user, {
+      name: 'Ionman',
+      bio: 'I come from planet Ion'
+    });
+
+    // Identify your user with the Ionic User Service
+    $ionicUser.identify(user).then(function(){
+      $scope.identified = true;
+      alert('Identified user ' + user.name + '\n ID ' + user.user_id);
+    });
+  };
+
+  $scope.pushRegister = function() {
+    $log.info('Ionic Push: Registering user');
+
+    // Register with the Ionic Push service.  All parameters are optional.
+    $ionicPush.register({
+      canShowAlert: true, //Can pushes show an alert on your screen?
+      canSetBadge: true, //Can pushes update app icon badges?
+      canPlaySound: true, //Can notifications play a sound?
+      canRunActionsOnWake: true, //Can run actions outside the app,
+      onNotification: function(notification) {
+        // Handle new push notifications here
+        $log.info(notification);
+
+        return true;
+      }
+    });
+  };
+
+    // Handles incoming device tokens
+  $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
+    alert("Successfully registered token " + data.token);
+    $log.info('Ionic Push: Got token ', data.token, data.platform);
+    $scope.token = data.token;
+  });
+})
+
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $state) {
 
   // With the new view caching in Ionic, Controllers are only called

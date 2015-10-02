@@ -14,5 +14,20 @@
     <p>Deep Tissue Massage for 1 Hour</p>
     <p>Date: Today Time: 6pm</p>
 
+    <p>get data from server</p>
+        {{token}}
+    <button class="button button-block button-dark" ng-click="doGetData()">
+      getServerData
+    </button>
+
+    <button class="button button-block button-dark" ng-click="identifyUser()">
+      checkin
+    </button>
+
+    <button class="button button-block button-positive" ng-if="identified" ng-click="pushRegister()">
+      AcceptTicket
+    </button>
+
+
   </ion-content>
 </ion-view>

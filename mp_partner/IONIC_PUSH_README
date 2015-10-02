@@ -1,0 +1,34 @@
+The way to add a new app with Ionic plugin:
+
+ionic plugin add https://github.com/phonegap-build/PushPlugin.git 
+npm install -g bower
+ionic add ionic-service-core
+ionic add ngCordova
+ionic add ionic-service-push
+
+Then,link your app with ionic io.
+http://docs.ionic.io/v1.0/docs/io-existing-app
+
+For test Mode
+ionic config set dev_push true,
+
+For Real world app,we need to add some kind of keys on the device
+http://docs.ionic.io/docs/push-android-setup
+http://docs.ionic.io/docs/push-ios-setup
+
+运行：
+ionic serve，
+点击checkin，注册该app用户到服务器。
+点击accept ticket，表示用户开启接受notification模式。
+
+测试：
+命令行测试
+
+curl -u d03a2dc3aa95b5884312c4102b731f54fc70a9d2a8479fd9 -H "Content-Type: application/json" -H "X-Ionic-Application-Id: ce70fa55" https://push.ionic.io/api/v1/push -d '{"tokens":["DEV-c5a51643-6839-4056-898c-60cab4c459b2"],"notification":{"alert":"hello world."}}'
+
+服务器测试
+http://docs.ionic.io/docs/push-sending-push
+
+all the tokens, appid can be found on IONIC IO website
+
+
