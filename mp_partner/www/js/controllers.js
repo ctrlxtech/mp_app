@@ -110,6 +110,17 @@ angular.module('starter.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
+
+  // Perform the checkIn action when the user submits the checkIn form
+  $scope.doCheckIn = function() {
+    console.log('Doing checkIn', $scope.checkInData);
+
+    // Simulate a checkIn delay. Remove this and replace with your checkIn
+    // code if using a login system
+    $timeout(function() {
+      $scope.closeLogin();
+    }, 1000);
+  };
 })
 
 .controller('LoginCtrl', function($scope, $timeout, $state) {
@@ -123,7 +134,22 @@ angular.module('starter.controllers', [])
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
-      $state.go('app.profile');
+      $state.go('app.home');
+    }, 1000);
+  };
+  
+})
+
+.controller('CheckInCtrl', function($scope, $timeout, $state) {
+
+  // Form data for the login modal
+  $scope.checkInData = {};
+  
+  $scope.doCheckIn = function() {
+    console.log('Doing login', $scope.checkInData);
+
+    $timeout(function() {
+      $state.go('app.working');
     }, 1000);
   };
   
@@ -147,10 +173,31 @@ angular.module('starter.controllers', [])
     $scope.orderId = $stateParams.orderId;
 })
 
-.controller('HistoryCtrl', function($scope, $state) {
+.controller('HistoryCtrl', function($scope, $stateParams) {
   $scope.orderlist = [
-    { title: '1', id: 1 },
-    { title: '2', id: 2 },
-    { title: '3', id: 3 }
+    { 
+		id: 1,
+		date: '1442370600000',
+		duration: 60,
+		type: 'Swedish',
+		city: 'Mountain View',
+		state: 'CA',
+		address: '123 Castro St',
+		total: 85.12,
+		status: 'Done'
+	},
+    { 
+		id: 2,
+		date: '1442527200000',
+		duration: 90,
+		type: 'Deep Tissue',
+		city: 'San Francisco',
+		state: 'CA',
+		address: '456 Market St',
+		total: 117.23,
+		status: 'Done'
+	}
   ];
+  
+  $scope.orderId = $stateParams.orderId;
 });

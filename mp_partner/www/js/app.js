@@ -48,6 +48,24 @@ angular.module('starter', ['ionic','ionic.service.core','ionic.service.push','ng
     }
   })
 
+  .state('app.home', {
+    url: '/home',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/home.html'
+      }
+    }
+  })
+
+  .state('app.working', {
+    url: '/working',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/working.html'
+      }
+    }
+  })
+
   .state('app.history', {
       url: '/history',
       views: {
@@ -63,7 +81,7 @@ angular.module('starter', ['ionic','ionic.service.core','ionic.service.push','ng
       views: {
         'menuContent': {
           templateUrl: 'templates/orderDetails.html',
-		  controller: 'DetailCtrl'
+		  controller: 'HistoryCtrl'
         }
       }
     })

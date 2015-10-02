@@ -1,0 +1,29 @@
+<ion-view view-title="Home">
+  <ion-header-bar>
+    <h1 class="title">Home</h1>
+  </ion-header-bar>
+
+  <ion-content>
+    
+    <p><h5>Missed request:</h5></p>
+    <p></p>
+
+    <p><h5>Next service:</h5></p>
+    <p>Nexta Servicer, 2250 3rd st, San Francisco, CA 94107</p>
+    <p>Deep Tissue Massage for 1 Hour</p>
+    <p>Date: Today Time: 6pm</p>
+
+    <form ng-submit="doCheckIn()">
+      <div class="list">
+        <label class="item item-input">
+          <input type="hidden" ng-model="loginData.username">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Check in</button>
+        </label>
+      </div>
+    </form>
+
+  </ion-content>
+</ion-view>
+
