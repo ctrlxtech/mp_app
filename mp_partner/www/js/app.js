@@ -38,12 +38,22 @@ angular.module('starter', ['ionic','ionic.service.core','ionic.service.push','ng
 	  controller: 'AppCtrl'
   })
   
-  .state('app.profile', {
+  /*.state('app.profile', {
     url: '/profile',
     views: {
       'menuContent': {
         controller: 'ProfileCtrl',
         templateUrl: 'templates/profile.html'
+      }
+    }
+  })*/
+
+  .state('app.test', {
+    url: '/test',
+    views: {
+      'menuContent': {
+        controller: 'TestCtrl',
+        templateUrl: 'templates/test.html'
       }
     }
   })

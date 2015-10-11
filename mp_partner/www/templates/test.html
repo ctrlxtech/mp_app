@@ -1,0 +1,17 @@
+<ion-view view-title="Test">
+  <ion-content>
+    <p>get data from server</p>
+       {{token}}
+    <button class="button button-block button-dark" ng-click="doGetData()">
+      getServerData
+    </button>
+
+    <button class="button button-block button-dark" ng-click="identifyUser()">
+      checkin
+    </button>
+ 
+    <button class="button button-block button-positive" ng-if="identified" ng-click="pushRegister()">
+      AcceptTicket
+    </button>
+  </ion-content>
+</ion-view>

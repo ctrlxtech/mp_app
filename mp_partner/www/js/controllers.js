@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('ProfileCtrl', function($scope, $rootScope, $ionicUser, $ionicPush, $log, $window, restful_send, $http) {
+.controller('TestCtrl', function($scope, $rootScope, $ionicUser, $ionicPush, $log, $window, restful_send, $http) {
   // Identifies a user with the Ionic User service
   $scope.doGetData = function() {
     $window.console.log("enter getData");
@@ -12,8 +12,9 @@ angular.module('starter.controllers', [])
         "tokens":[
           $scope.token
         ],
+
         "notification":{
-          "alert":"Hello World!",
+          "alert":"Hello !",
         }
       },
       headers: {  'Content-Type': 'application/json' ,
@@ -34,7 +35,7 @@ angular.module('starter.controllers', [])
 
     // Add some metadata to your user object.
     angular.extend(user, {
-      name: 'Ionman',
+      name: 'Ionmanaa',
       bio: 'I come from planet Ion'
     });
 
