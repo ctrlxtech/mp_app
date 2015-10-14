@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
-.controller('ScheduleCtrl', function($scope, $state, $stateParams) {
-  $scope.weekdays = [ 
+.controller('ScheduleCtrl', function($scope, $state, $stateParams, $http) {
+  /*$scope.weekdays = [ 
     { 
       day: 'Monday',
 	  intervals: [
@@ -26,7 +26,13 @@ angular.module('starter.controllers')
 	  ],
       toggle: false 
     }
-  ];
+  ];*/
+  
+  $http.get('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/manager/getSchedule').success(function(data) { 
+	$scope.weekdays = data; 
+	console.log('Schedule', data);
+  });
+	
   $scope.editmode = function() {
     $state.go('app.editschedule');
   };

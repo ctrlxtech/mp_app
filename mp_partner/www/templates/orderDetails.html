@@ -2,22 +2,28 @@
   <ion-content>
     <div style="display: block; width: 100%; padding:10px; font-size: initial; color: #444; line-height:24px;">
 		<div>
-			<span style="">Date: </span> <span style="float:right">{{orderlist[orderId-1].date | date: 'fullDate'}}</span>
+			<span style="">Date: </span> <span style="float:right">{{orderlist[orderId].date | date: 'fullDate'}}</span>
 		</div>
 		<div>
-			<span style="">Time: </span> <span style="float:right">{{orderlist[orderId-1].date | date: 'hh:mm a'}}</span>
+			<span style="">Time: </span> <span style="float:right">{{orderlist[orderId].date | date: 'hh:mm a'}}</span>
 		</div>
 		<div>
-			<span style="">Address: </span> <span style="float:right">{{orderlist[orderId-1].address}}</span>
+			<span style="">Type: </span> <span style="float:right">{{orderlist[orderId].type}}</span>
 		</div>
 		<div>
-			<span style="">City: </span> <span style="float:right">{{orderlist[orderId-1].city}}, {{orderlist[orderId-1].state}}</span>
+			<span style="">Duration: </span> <span style="float:right">{{orderlist[orderId].duration}}min</span>
 		</div>
 		<div>
-			<span style="">Total: </span> <span style="float:right">${{orderlist[orderId-1].total}}</span>
+			<span style="">Address: </span> <span style="float:right">{{orderlist[orderId].address}}</span>
 		</div>
 		<div>
-			<span style="">Status: </span> <span style="float:right">{{orderlist[orderId-1].status}}</span>
+			<span style="">City: </span> <span style="float:right">{{orderlist[orderId].city}}, {{orderlist[orderId].state}}</span>
+		</div>
+		<div>
+			<span style="">Earn: </span> <span style="float:right">${{orderlist[orderId].earn}}</span>
+		</div>
+		<div>
+			<span style="">Status: </span> <span style="float:right">{{orderlist[orderId].status}}</span>
 		</div>
 	</div>
   </ion-content>

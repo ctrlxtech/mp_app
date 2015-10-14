@@ -124,15 +124,38 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $state) {
+.controller('LoginCtrl', function($scope, $timeout, $state, $http) {
 
   // Form data for the login modal
-  $scope.loginData = {};
+  $scope.loginData = {username : '',password : ''};
+  $scope.loginstatus = {};
   
   $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-
-    // Simulate a login delay. Remove this and replace with your login
+    console.log('Doing login', JSON.stringify($scope.loginData));
+	
+	/*$http({
+		method: 'POST',
+		url: 'http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/customer/userLogin',
+		data: $scope.loginData,
+		//headers: {'csrfmiddlewaretoken': 'VU3mDLhQjPgLxEbPPtdhkP9YdV893VfV'}
+	}).then(function(result) {
+			$scope.loginstatus = result.data;
+			console.log($scope.loginstatus.status);
+			if ($scope.loginstatus.status == "failure" ) { alert("failure");}
+       }, function(error) {
+           console.log('Error log', error);
+       });*/
+	var res = $http.post('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/customer/userLogin', $scope.loginData);
+	res.success(function(data, status, headers, config) { 
+		$scope.loginstatus = JSON.stringify(data); 
+	});
+	res.error(function(data, status, headers, config) {
+		alert( "failure message: " + JSON.stringify({data: data}));
+	});
+	
+	console.log('Login status', $scope.loginstatus);
+	
+	// Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
       $state.go('app.home');
@@ -174,7 +197,7 @@ angular.module('starter.controllers', [])
     $scope.orderId = $stateParams.orderId;
 })
 
-.controller('HistoryCtrl', function($scope, $stateParams) {
+.controller('bak_HistoryCtrl', function($scope, $stateParams) {
   $scope.orderlist = [
     { 
 		id: 1,
@@ -201,4 +224,13 @@ angular.module('starter.controllers', [])
   ];
   
   $scope.orderId = $stateParams.orderId;
+})
+
+.controller('HistoryCtrl', function($scope, $stateParams, $http) {
+	$http.get('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/manager/getOrderlist').success(function(data) { 
+		$scope.orderlist = data; 
+		console.log('Order list', data);
+	});
+	
+	$scope.orderId = $stateParams.orderId;
 });
