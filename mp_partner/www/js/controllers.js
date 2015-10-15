@@ -72,7 +72,7 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $state) {
+.controller('AppCtrl', function($rootScope, $scope, $ionicModal, $timeout, $state) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -80,7 +80,8 @@ angular.module('starter.controllers', [])
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-
+  
+/*
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -111,7 +112,7 @@ angular.module('starter.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
-
+*/
   // Perform the checkIn action when the user submits the checkIn form
   $scope.doCheckIn = function() {
     console.log('Doing checkIn', $scope.checkInData);
@@ -119,16 +120,17 @@ angular.module('starter.controllers', [])
     // Simulate a checkIn delay. Remove this and replace with your checkIn
     // code if using a login system
     $timeout(function() {
-      $scope.closeLogin();
+      //$scope.closeLogin();
     }, 1000);
   };
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $state, $http) {
+.controller('LoginCtrl', function($rootScope, $scope, $timeout, $state, $http) {
 
   // Form data for the login modal
   $scope.loginData = {username : '',password : ''};
-  $scope.loginstatus = {};
+  $rootScope.loginstatus = {};
+  $scope.errshow = false;
   
   $scope.doLogin = function() {
     console.log('Doing login', JSON.stringify($scope.loginData));
@@ -145,21 +147,27 @@ angular.module('starter.controllers', [])
        }, function(error) {
            console.log('Error log', error);
        });*/
-	var res = $http.post('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/customer/userLogin', $scope.loginData);
+	var res = $http.post('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/customer/userLoginFromJson', JSON.stringify($scope.loginData));
 	res.success(function(data, status, headers, config) { 
-		$scope.loginstatus = JSON.stringify(data); 
+		$rootScope.loginstatus = data; 
+		console.log('Login status', data);
+		if ($rootScope.loginstatus.status == "success") {
+			//alert("success!");
+			$scope.errshow = false;
+			// Simulate a login delay. Remove this and replace with your login
+			// code if using a login system
+			$timeout(function() {
+			  $state.go('app.home');
+			}, 1000);
+		}
+		else{
+			$scope.errshow = true;
+		}
 	});
 	res.error(function(data, status, headers, config) {
 		alert( "failure message: " + JSON.stringify({data: data}));
 	});
 	
-	console.log('Login status', $scope.loginstatus);
-	
-	// Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $state.go('app.home');
-    }, 1000);
   };
   
 })

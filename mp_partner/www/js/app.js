@@ -23,7 +23,7 @@ angular.module('starter', ['ionic','ionic.service.core','ionic.service.push','ng
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
- 
+
   $stateProvider
   .state('login', {
     url: '/login',
