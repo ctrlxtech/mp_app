@@ -17,8 +17,8 @@
 		<div style="padding:10px; width: 100%;">
 			<img src="img/default.jpeg" height="50px" style="border-radius: 25px;">
 			<div style="font-size:18px;display: block;padding-top: 10px;">
-				<span style="font-weight:500;">{{loginstatus.firstName}}</span>
-				<span style="float:right;">5★</span>
+				<span style="font-weight:500;">{{loginstatus.firstName}} {{loginstatus.lastName}}</span>
+				<span style="float:right;">{{loginstatus.rating | number: 1}}★</span>
 			</div>
 		</div>
     </ion-header-bar>

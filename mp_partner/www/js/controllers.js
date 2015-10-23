@@ -234,10 +234,21 @@ angular.module('starter.controllers', [])
   $scope.orderId = $stateParams.orderId;
 })
 
-.controller('HistoryCtrl', function($scope, $stateParams, $http) {
-	$http.get('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/manager/getOrderlist').success(function(data) { 
+.controller('HistoryCtrl', function($rootScope, $scope, $stateParams, $http) {
+	/*$http.get('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/manager/getOrderlist').success(function(data) { 
 		$scope.orderlist = data; 
 		console.log('Order list', data);
+	});*/
+	data = JSON.stringify({uid:$rootScope.loginstatus.uid})
+	console.log(data);
+
+	var res = $http.post('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/manager/getOrderlist', data);
+	res.success(function(data, status, headers, config) {
+		$scope.orderlist = data;
+		console.log('Order list', data);
+	});
+	res.error(function(data, status, headers, config) {
+		alert( "failure message: " + JSON.stringify({data: data}));
 	});
 	
 	$scope.orderId = $stateParams.orderId;
