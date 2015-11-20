@@ -62,20 +62,23 @@ angular.module('starter', ['ionic','ionic.service.core','ionic.service.push','ng
     url: '/home',
     views: {
       'menuContent': {
+		controller: 'CheckInCtrl',
         templateUrl: 'templates/home.html'
       }
     }
   })
 
-  .state('app.working', {
-    url: '/working',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/working.html'
+  .state('app.requests', {
+      url: '/requests',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/requests.html',
+		  controller: 'RequestCtrl'
+  	    }
       }
-    }
-  })
+    })
 
+	
   .state('app.history', {
       url: '/history',
       views: {

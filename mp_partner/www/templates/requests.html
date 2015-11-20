@@ -1,0 +1,14 @@
+<ion-view view-title="History">
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="order in orderlist" href="#/app/history/{{$index}}" class="item-icon-right">
+        <div style="display: inline-block; width: 100%;">
+			<span style="float:left">{{order.date | date: 'shortDate'}}</span>
+			<span style="float:right">${{order.earn}}</span>
+		</div>
+		<div>{{order.city}}</div>
+		<i class="icon ion-chevron-right icon-accessory" style=""></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

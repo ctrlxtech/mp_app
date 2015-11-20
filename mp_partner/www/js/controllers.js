@@ -113,19 +113,11 @@ angular.module('starter.controllers', [])
     }, 1000);
   };
 */
-  // Perform the checkIn action when the user submits the checkIn form
-  $scope.doCheckIn = function() {
-    console.log('Doing checkIn', $scope.checkInData);
-
-    // Simulate a checkIn delay. Remove this and replace with your checkIn
-    // code if using a login system
-    $timeout(function() {
-      //$scope.closeLogin();
-    }, 1000);
-  };
 })
 
 .controller('LoginCtrl', function($rootScope, $scope, $timeout, $state, $http) {
+
+  $state.go('app.home');
 
   // Form data for the login modal
   $scope.loginData = {username : '',password : ''};
@@ -172,17 +164,50 @@ angular.module('starter.controllers', [])
   
 })
 
-.controller('CheckInCtrl', function($scope, $timeout, $state) {
+.controller('CheckInCtrl', function($scope, $timeout, $state, $ionicModal, $ionicPopup) {
+ 
+  // Create the working modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/working-modal.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
 
-  // Form data for the login modal
+  // Triggered in the working modal to close it
+  $scope.doCheckout = function() {	  
+	console.log('Doing Checkout');
+	
+    $timeout(function() {
+		$scope.modal.hide();
+	}, 500);
+  };
+  
   $scope.checkInData = {};
   
-  $scope.doCheckIn = function() {
-    console.log('Doing login', $scope.checkInData);
+  $scope.doCheckin = function() {
+    console.log('Doing Checkin', $scope.checkInData);
 
     $timeout(function() {
-      $state.go('app.working');
-    }, 1000);
+	// Open the working modal
+      $scope.modal.show();
+    }, 500);
+  };
+  
+  $scope.doAlert = function() {
+	$scope.modal['backdropClickToClose'] = false;
+    $scope.modal['hardwareBackButtonClose'] = false;
+   
+	$ionicPopup.confirm({
+       title: 'Report Emergency',
+       template: 'We are going to report the emercency to our operator. Do you want to proceed?'
+     }).then(function(res) { 
+		 if(res) {
+			console.log('Emergency reported');   
+		 }
+		 else {
+			return;
+		}
+    });
   };
   
 })

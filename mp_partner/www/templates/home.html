@@ -1,29 +1,23 @@
-<ion-view view-title="Home">
-  <ion-header-bar>
-    <h1 class="title">Home</h1>
-  </ion-header-bar>
+<ion-view view-title="Dashboard">
+	<ion-content>
+	   <ion-list>
+		  <div class="list card">
+			<div class="item item-divider">Upcoming Service</div>
+			<div class="item item-body">
+			  <div style="line-height:27px;">
+				John D. </br>
+				Nov 19, 6pm</br>
+				2250 3rd St, San Francisco, CA 94107</br>
+				Deep Tissue Massage for 1 Hour</br>
+			  </div>
+			</div>
+			<a class="item item-icon-left positive" href="#" ng-click="doCheckin()" style="font-weight:500;">
+			  <i class="icon ion-android-checkbox-outline"></i> Check in
+			</a>
+			<!--<button class="button button-full button-positive" ng-click="">Check in</button>-->
+		  </div>
 
-  <ion-content>
-    
-    <p><h5>Missed request:</h5></p>
-    <p></p>
-
-    <p><h5>Next service:</h5></p>
-    <p>Nexta Servicer, 2250 3rd st, San Francisco, CA 94107</p>
-    <p>Deep Tissue Massage for 1 Hour</p>
-    <p>Date: Today Time: 6pm</p>
-
-    <form ng-submit="doCheckIn()">
-      <div class="list">
-        <label class="item item-input">
-          <input type="hidden" ng-model="loginData.username">
-        </label>
-        <label class="item">
-          <button class="button button-block button-positive" type="submit">Check in</button>
-        </label>
-      </div>
-    </form>
-
-  </ion-content>
+		</ion-list>
+	</ion-content>
 </ion-view>
 
