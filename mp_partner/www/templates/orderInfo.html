@@ -1,0 +1,27 @@
+<div style="display: block; width: 100%; padding:10px; font-size: initial; color: #444; line-height:24px;">
+
+	<div>
+		<span style="">Date: </span> <span style="float:right">{{orderinfo.date | date: 'fullDate'}}</span>
+	</div>
+	<div>
+		<span style="">Time: </span> <span style="float:right">{{orderinfo.date | date: 'hh:mm a'}}</span>
+	</div>
+	<div>
+		<span style="">Type: </span> <span style="float:right">{{orderinfo.type}}</span>
+	</div>
+	<div>
+		<span style="">Duration: </span> <span style="float:right">{{orderinfo.duration}}min</span>
+	</div>
+	<div>
+		<span style="">Address: </span> <span style="float:right">{{orderinfo.address}}</span>
+	</div>
+	<div>
+		<span style="">City: </span> <span style="float:right">{{orderinfo.city}}, {{orderinfo.state}}</span>
+	</div>
+	<div>
+		<span style="">Earn: </span> <span style="float:right">${{orderinfo.earn}}</span>
+	</div>
+	<div>
+		<span style="">Status: </span> <span style="float:right">{{orderinfo.status}}</span>
+	</div>
+</div>

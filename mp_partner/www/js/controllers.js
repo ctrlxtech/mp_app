@@ -117,7 +117,7 @@ angular.module('starter.controllers', [])
 
 .controller('LoginCtrl', function($rootScope, $scope, $timeout, $state, $http) {
 
-  $state.go('app.home');
+  //$state.go('app.home');
 
   // Form data for the login modal
   $scope.loginData = {username : '',password : ''};
@@ -230,8 +230,21 @@ angular.module('starter.controllers', [])
     $scope.orderId = $stateParams.orderId;
 })
 
-.controller('bak_HistoryCtrl', function($scope, $stateParams) {
-  $scope.orderlist = [
+.controller('RequestCtrl', function($scope, $timeout, $state, $ionicModal) {
+	
+  $ionicModal.fromTemplateUrl('templates/newOrder-modal.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  
+  $scope.closeOrder = function() {	  
+	$timeout(function() {
+		$scope.modal.hide();
+	}, 500);
+  };
+  
+  $scope.requestlist = [
     { 
 		id: 1,
 		date: '1442370600000',
@@ -240,7 +253,7 @@ angular.module('starter.controllers', [])
 		city: 'Mountain View',
 		state: 'CA',
 		address: '123 Castro St',
-		total: 85.12,
+		earn: 50,
 		status: 'Done'
 	},
     { 
@@ -251,12 +264,22 @@ angular.module('starter.controllers', [])
 		city: 'San Francisco',
 		state: 'CA',
 		address: '456 Market St',
-		total: 117.23,
+		earn: 80,
 		status: 'Done'
 	}
   ];
+
+  $scope.openOrder = function(index) {
+	console.log('Open Order', index);
+	$scope.orderId = index;
+
+    $timeout(function() {
+	// Open the new order modal
+      $scope.modal.show();
+    }, 500);
+
+  };
   
-  $scope.orderId = $stateParams.orderId;
 })
 
 .controller('HistoryCtrl', function($rootScope, $scope, $stateParams, $http) {
