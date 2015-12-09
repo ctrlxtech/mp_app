@@ -5,6 +5,10 @@
     <button class="button button-block button-dark" ng-click="doGetData()">
       getServerData
     </button>
+	
+	<button class="button button-block button-dark" ng-click="pushNewOrder()">
+      pushNewOrder
+    </button>
 
     <button class="button button-block button-dark" ng-click="identifyUser()">
       checkin
@@ -13,5 +17,6 @@
     <button class="button button-block button-positive" ng-if="identified" ng-click="pushRegister()">
       AcceptTicket
     </button>
+	<div>{{token}}</div>
   </ion-content>
 </ion-view>

@@ -1,9 +1,9 @@
 <ion-view view-title="Schedule" >
   <ion-content>
     <ion-list>
-		<ion-item  ng-repeat="day in weekdays" ng-href="#/app/editschedule/{{$index}}" class="item-remove-animate item-icon-right" >
+		<ion-item  ng-repeat="slot in weekdays.slot" ng-href="#/app/editschedule/{{$index}}" class="item-remove-animate item-icon-right" >
 			<div style="width: 100%;">
-				<day-schedule info="weekdays[$index]" style="display: inline;"></day-schedule>
+				<day-schedule info="slot" style="display: inline;"></day-schedule>
 				<i class="icon ion-chevron-right icon-accessory" style=""></i>
 			</div>
 		</ion-item >

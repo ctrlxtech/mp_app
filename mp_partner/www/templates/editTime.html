@@ -6,12 +6,14 @@
     </ion-nav-buttons>
   <ion-content>
 	<ion-list>
-		<ion-item ng-repeat="interval in weekdays[dayId].intervals" class="item-remove-animate item-edittime">
+		<ion-item ng-repeat="interval in weekdays.slot[dayId].interval" class="item-remove-animate item-edittime">
 			<div style="text-align: center;">
-				<span class="time">{{interval.starttime}}</span>&nbsp;-&nbsp;<span class="time">{{interval.endtime}}</span>
+				<span class="time">{{interval.start_time/3600 | floor | zpad:2}}:{{interval.start_time%3600/60 | floor | zpad:2}}</span>
+				&nbsp;-&nbsp;
+				<span class="time">{{interval.end_time/3600 | floor | zpad:2}}:{{interval.end_time%3600/60 | floor | zpad:2}}</span>
 				<div>
-					<input type="time" id="starttime" value="{{interval.starttime | limitTo:5}}" style="display: inline-block;">
-					<input type="time" id="endtime" value="{{interval.endtime | limitTo:5}}" style="display: inline-block;">
+					<input type="time" step="900" id="starttime" ng-model="interval.start_time_temp" placeholder="HH:mm" min="09:00" max="23:00" style="display: inline-block;">
+					<input type="time" step="900" id="endtime" ng-model="interval.end_time_temp" placeholder="HH:mm" min="09:00" max="23:00" style="display: inline-block;">
 				</div>
 			</div>
 			<ion-option-button class="button-assertive" ng-click="delTimeslot(dayId, $index)">

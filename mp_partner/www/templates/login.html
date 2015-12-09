@@ -7,11 +7,11 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Username</span>
-          <input type="text" ng-model="loginData.username">
+          <input type="text" ng-model="loginData.username" name="username" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Password</span>
-          <input type="password" ng-model="loginData.password">
+          <input type="password" ng-model="loginData.password" name="password" required />
         </label>
 		<label ng-show="errshow" class="item animate-show ng-hide-add-active isa_error">
 		  <i class="icon ion-close-circled"></i>

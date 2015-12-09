@@ -4,26 +4,27 @@ angular.module('starter.controllers', [])
   // Identifies a user with the Ionic User service
   $scope.doGetData = function() {
     $window.console.log("enter getData");
-    $window.console.log($scope.token);
+    $window.console.log($rootScope.token);
     $http({
       method: 'POST',
       url: "https://push.ionic.io/api/v1/push",
       data: {
         "tokens":[
-          $scope.token
+          $rootScope.token
         ],
-
+		"debug": true,
         "notification":{
           "alert":"Hello !",
         }
       },
       headers: {  'Content-Type': 'application/json' ,
-                  'X-Ionic-Application-Id': "ce70fa55",
-                  "Authorization": btoa('d03a2dc3aa95b5884312c4102b731f54fc70a9d2a8479fd9' + ":" + "")
+                  'X-Ionic-Application-Id': "4023a170",
+                  "Authorization": btoa('eead407bbe5e1a7641d3a7c2a3377ed160c769eac199b325' + ":" + "")
               }
     });
 
   };
+  
   $scope.identifyUser = function() {
     $log.info('Ionic User: Identifying with Ionic User service');
 
@@ -42,10 +43,12 @@ angular.module('starter.controllers', [])
     // Identify your user with the Ionic User Service
     $ionicUser.identify(user).then(function(){
       $scope.identified = true;
+	  console.log('User ID ' + user.user_id);
       alert('Identified user ' + user.name + '\n ID ' + user.user_id);
     });
   };
 
+  /*
   $scope.pushRegister = function() {
     $log.info('Ionic Push: Registering user');
 
@@ -58,21 +61,60 @@ angular.module('starter.controllers', [])
       onNotification: function(notification) {
         // Handle new push notifications here
         $log.info(notification);
-
+		if(notification["$state"]) {
+			//prompt the user to switch
+			navigator.notification.confirm("You have a new order - go to it?", function(btn) {
+			  if(btn === 1) {
+				$state.go(notification["$state"]);
+			  }
+			},"New Order!")
         return true;
       }
     });
-  };
+  };*/
 
+  $scope.pushNewOrder = function() {
+	console.log("push new order");
+    console.log($rootScope.token);
+    $http({
+      method: 'POST',
+      url: "https://push.ionic.io/api/v1/push",
+      data: {
+        "tokens":[
+          $rootScope.token
+        ],
+		"debug": true,
+        "notification":{
+          "alert":"New Order!",
+		  "ios":{
+			  "badge":1,
+			  "sound":"ping.aiff",
+			  "priority": 10,
+			  "content-available":1,
+			  "payload":{
+				  "$state": "app.requests"
+			  }
+		  }
+        }
+      },
+      headers: {  'Content-Type': 'application/json' ,
+                  'X-Ionic-Application-Id': "4023a170",
+                  "Authorization": btoa('eead407bbe5e1a7641d3a7c2a3377ed160c769eac199b325' + ":" + "")
+              }
+    });
+  
+  };
+  
+  /*
     // Handles incoming device tokens
   $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
     alert("Successfully registered token " + data.token);
     $log.info('Ionic Push: Got token ', data.token, data.platform);
     $scope.token = data.token;
-  });
+  });*/
 })
 
-.controller('AppCtrl', function($rootScope, $scope, $ionicModal, $timeout, $state) {
+.controller('AppCtrl', function($rootScope, $scope, $ionicModal, $timeout, $state, $http) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -113,23 +155,50 @@ angular.module('starter.controllers', [])
     }, 1000);
   };
 */
+
+  $scope.doLogout = function() {
+    console.log('Doing logout');
+
+    $timeout(function() {
+      $state.go('login');
+    }, 500);
+  };
+
+  $rootScope.getProto = function(type) {
+	var builder = dcodeIO.ProtoBuf.loadProtoFile("https://raw.githubusercontent.com/ctrlxtech/mp_ui/master/protobuf/therapist.proto?token=AHZIC7p81yRMte0V-3ND2qXG2w5Q6Mi9ks5Waig8wA%3D%3D");
+	var proto = builder.build("massagepanda");
+	switch(type) {
+    case 0:
+        var ProtoList = proto.therapist.OrderList;
+        break;
+    case 1:
+        var ProtoList = proto.therapist.Schedule;
+        break;
+	case 2:
+		var ProtoList = proto.therapist.ActionRequest;
+		break;
+	}
+	return ProtoList;
+  };
+	
 })
 
-.controller('LoginCtrl', function($rootScope, $scope, $timeout, $state, $http) {
+.controller('LoginCtrl', function($rootScope, $scope, $timeout, $state, $http, $localstorage) {
 
   //$state.go('app.home');
 
   // Form data for the login modal
-  $scope.loginData = {username : '',password : ''};
+  $scope.loginData = {username : $localstorage.get('username'),password : ''};
   $rootScope.loginstatus = {};
   $scope.errshow = false;
-  
+	  
   $scope.doLogin = function() {
     console.log('Doing login', JSON.stringify($scope.loginData));
-	
+	$localstorage.set('username', $scope.loginData.username);
+	//console.log($localstorage.get('username'));
 	/*$http({
 		method: 'POST',
-		url: 'http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/customer/userLogin',
+		url: 'http://www.massagepanda.us/customer/userLogin',
 		data: $scope.loginData,
 		//headers: {'csrfmiddlewaretoken': 'VU3mDLhQjPgLxEbPPtdhkP9YdV893VfV'}
 	}).then(function(result) {
@@ -139,15 +208,63 @@ angular.module('starter.controllers', [])
        }, function(error) {
            console.log('Error log', error);
        });*/
-	var res = $http.post('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/customer/userLoginFromJson', JSON.stringify($scope.loginData));
+	var res = $http.post('http://www.massagepanda.us/customer/userLoginFromJson', JSON.stringify($scope.loginData));
 	res.success(function(data, status, headers, config) { 
 		$rootScope.loginstatus = data; 
 		console.log('Login status', data);
 		if ($rootScope.loginstatus.status == "success") {
 			//alert("success!");
 			$scope.errshow = false;
+			$scope.loginData = {username : $localstorage.get('username'),password : ''};
+			
+			Ionic.io();
+
+			var push = new Ionic.Push({
+			  "debug": true,
+			  "onNotification": function(notification) {
+				var payload = notification.payload;
+				console.log(notification, payload);
+				alert(notification.text);
+				if(notification["$state"]) {
+					//prompt the user to switch
+					navigator.notification.confirm("You have a new order - go to it?", function(btn) {
+					  if(btn === 1) {
+						$state.go(notification["$state"]);
+					  }
+					},"New Order!")
+				}
+			  },
+			  "onRegister": function(data) {
+				console.log(data.token);
+			  },
+			  "pluginConfig": {
+				"ios": {
+				  "alert": true,
+				  "badge": true,
+				  "sound": true,
+				 }
+			  }
+			});
+			var user = Ionic.User.current();
+			
+			// if the user doesn't have an id, you'll need to give it one.
+			if (!user.id) {
+			  user.id = Ionic.User.anonymousId();
+			}
+
+			user.set('name', $scope.loginData.username);
+			user.set('bio', 'test account');
+			//user.save();
+
+			push.register(function(token) {
+			  // Log out your device token (Save this!)
+			  console.log("Got Token:",token.token);
+			  $rootScope.token = token.token;
+			  push.addTokenToUser(user);
+			  user.save();
+			});
+			  
 			// Simulate a login delay. Remove this and replace with your login
-			// code if using a login system
 			$timeout(function() {
 			  $state.go('app.home');
 			}, 1000);
@@ -164,7 +281,7 @@ angular.module('starter.controllers', [])
   
 })
 
-.controller('CheckInCtrl', function($scope, $timeout, $state, $ionicModal, $ionicPopup) {
+.controller('CheckInCtrl', function($scope, $rootScope, $timeout, $state, $ionicModal, $ionicPopup, $http) {
  
   // Create the working modal that we will use later
   $ionicModal.fromTemplateUrl('templates/working-modal.html', {
@@ -209,7 +326,7 @@ angular.module('starter.controllers', [])
 		}
     });
   };
-  
+	
 })
 
 .controller('PlaylistsCtrl', function($scope) {
@@ -252,6 +369,7 @@ angular.module('starter.controllers', [])
 		type: 'Swedish',
 		city: 'Mountain View',
 		state: 'CA',
+		zipcode: '94043',
 		address: '123 Castro St',
 		earn: 50,
 		status: 'Done'
@@ -263,10 +381,12 @@ angular.module('starter.controllers', [])
 		type: 'Deep Tissue',
 		city: 'San Francisco',
 		state: 'CA',
+		zipcode: '94102',
 		address: '456 Market St',
 		earn: 80,
 		status: 'Done'
 	}
+		
   ];
 
   $scope.openOrder = function(index) {
@@ -283,21 +403,47 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HistoryCtrl', function($rootScope, $scope, $stateParams, $http) {
-	/*$http.get('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/manager/getOrderlist').success(function(data) { 
-		$scope.orderlist = data; 
-		console.log('Order list', data);
-	});*/
-	data = JSON.stringify({uid:$rootScope.loginstatus.uid})
-	console.log(data);
 
-	var res = $http.post('http://ec2-52-8-5-153.us-west-1.compute.amazonaws.com/manager/getOrderlist', data);
+	data = JSON.stringify({uid:$rootScope.loginstatus.uid});
+	console.log(data);
+	$scope.orderlist = new Array();
+	$scope.date = {low:0, high:0, unsigned:false};
+
+	/*var res = $http.post('http://www.massagepanda.us/manager/getOrderlist', data);
 	res.success(function(data, status, headers, config) {
 		$scope.orderlist = data;
 		console.log('Order list', data);
 	});
 	res.error(function(data, status, headers, config) {
 		alert( "failure message: " + JSON.stringify({data: data}));
+	});*/
+
+	var url = 'http://www.massagepanda.us/manager/getOrderlist';
+
+	var res = $http.post(url, data, {responseType: 'arraybuffer'});
+	//res.success(function(data, status, headers, config) {
+	res.success(function(data) {
+		//var bb = new dcodeIO.ByteBuffer();
+		//bb = dcodeIO.ByteBuffer.wrap(data, "binary");
+		$scope.orderlist = $rootScope.getProto(0).decode(data);
+		console.log('Order list', $scope.orderlist);
 	});
+	res.error(function(data, status, headers, config) {
+		alert( "failure message: " + JSON.stringify({data: data}));
+	});
+		
+	$scope.convertLongDate = function(date) {
+		//console.log(date);
+		if (date){
+			var longDate = new dcodeIO.Long(date.low, date.high, date.unsigned);
+			//console.log(longDate.toString());
+			return longDate.toString();
+		}
+		else{
+			//console.log('Loading');
+			return 'Loading';
+		}
+	};
 	
 	$scope.orderId = $stateParams.orderId;
 });

@@ -4,7 +4,7 @@ angular.module('starter.controllers')
   return { 
     restrict: 'E', 
     scope: { 
-      info: '=' 
+      info: '=info' 
     }, 
 	replace: true,
     templateUrl: 'templates/daySchedule.html' 

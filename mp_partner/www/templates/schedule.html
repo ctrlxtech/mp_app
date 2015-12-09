@@ -6,8 +6,8 @@
 	  <!--<a href="#/app/editschedule">Edit</a>-->
     </ion-nav-buttons>
   <ion-content>
-	<ion-toggle ng-repeat="day in weekdays" ng-model="day.active" toggle-class="icon" class="item-icon-right toggle-middle">
-		<day-schedule info="day"></day-schedule>
+	<ion-toggle ng-repeat="slot in weekdays.slot" ng-model="slot.status" toggle-class="icon" class="item-icon-right toggle-middle">
+		<day-schedule info="slot"></day-schedule>
 	</ion-toggle>
   </ion-content>
 </ion-view>

@@ -1,27 +1,27 @@
 <div style="display: block; width: 100%; padding:10px; font-size: initial; color: #444; line-height:24px;">
-
+	<img src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&key=AIzaSyDG4sCXrk0S3UVEdpwfm-YQYKWK_YJ3XX0" width="100%" /> 
 	<div>
-		<span style="">Date: </span> <span style="float:right">{{orderinfo.date | date: 'fullDate'}}</span>
+		<span style="">Date: </span> <span style="float:right">{{convertDate({date:orderinfo.service_time}) | date: 'fullDate'}}</span>
 	</div>
 	<div>
-		<span style="">Time: </span> <span style="float:right">{{orderinfo.date | date: 'hh:mm a'}}</span>
+		<span style="">Time: </span> <span style="float:right">{{convertDate({date:orderinfo.service_time}) | date: 'hh:mm a'}}</span>
 	</div>
 	<div>
-		<span style="">Type: </span> <span style="float:right">{{orderinfo.type}}</span>
+		<span style="">Type: </span> <span style="float:right">{{orderinfo.service_type}}</span>
 	</div>
 	<div>
-		<span style="">Duration: </span> <span style="float:right">{{orderinfo.duration}}min</span>
+		<span style="">Duration: </span> <span style="float:right">{{orderinfo.service_duration}}min</span>
 	</div>
 	<div>
-		<span style="">Address: </span> <span style="float:right">{{orderinfo.address}}</span>
+		<span style="">Address: </span> <span style="float:right">{{orderinfo.address.address_line}}</span>
 	</div>
 	<div>
-		<span style="">City: </span> <span style="float:right">{{orderinfo.city}}, {{orderinfo.state}}</span>
+		<span style="">City: </span> <span style="float:right">{{orderinfo.address.city}}, {{orderinfo.address.state}} {{orderinfo.address.zipcode}}</span>
 	</div>
 	<div>
 		<span style="">Earn: </span> <span style="float:right">${{orderinfo.earn}}</span>
 	</div>
 	<div>
-		<span style="">Status: </span> <span style="float:right">{{orderinfo.status}}</span>
+		<span style="">Status: </span> <span style="float:right">{{orderinfo.order_status}}</span>
 	</div>
 </div>
