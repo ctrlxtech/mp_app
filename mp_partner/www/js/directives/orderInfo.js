@@ -5,6 +5,7 @@ angular.module('starter.controllers')
     restrict: 'E', 
     scope: { 
       orderinfo: '=orderinfo',
+	  mapSrc: '=mapSrc',
 	  convertDate: '&convertDate'
     }, 
 	replace: true,

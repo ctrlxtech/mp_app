@@ -6,7 +6,7 @@
     </div>
   </ion-header-bar>
   <ion-content>
-	<order-info orderinfo="requestlist[orderId]"></order-info>
+	<order-info orderinfo="requestlist.order[orderId]" map-src="src" convert-date="convertLongDate(date)"></order-info>
   </ion-content>
   <div class="bar bar-footer" style="height:50px;" ng-click="acceptOrder()">
     <a class="button button-positive" style="width:100%;font-size: 16px;line-height: 37px;font-weight:500;">Accept Order</a>

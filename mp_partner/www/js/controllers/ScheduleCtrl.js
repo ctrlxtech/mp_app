@@ -24,36 +24,6 @@ angular.module('starter.controllers')
 		}
     ]
   };
-    //$scope.Math = window.Math;
-  
-	data = JSON.stringify({uid:$rootScope.loginstatus.uid});
-	var url = 'http://www.massagepanda.us/manager/getSchedule';
-
-	var res = $http.post(url, data, {responseType: 'arraybuffer'});
-	res.success(function(data) {
-		cache = $rootScope.getProto(1).decode(data);
-		//console.log(cache.slot.length);
-		if (cache.slot.length!==0)	$scope.weekdays = cache;
-		else $scope.weekdays = weekdaysTest;
-		console.log('Schedule list', $scope.weekdays);
-		
-		//process integer interval time and output date object to temp
-		for (i = 0; i < $scope.weekdays.slot.length; i++) { 
-			var intervalTemp = $scope.weekdays.slot[i].interval;
-			for (j = 0; j < intervalTemp.length; j++) { 
-			  intervalTemp[j].start_time_temp = $scope.convertTime(intervalTemp[j].start_time);
-			  intervalTemp[j].end_time_temp = $scope.convertTime(intervalTemp[j].end_time);
-			}
-		}
-	});
-	res.error(function(data, status, headers, config) {
-		alert( "failure message: " + JSON.stringify({data: data}));
-	});
-	
-  /*$http.get('http://www.massagepanda.us/manager/getSchedule').success(function(data) { 
-	$scope.weekdays = data; 
-	console.log('Schedule', data);
-  });*/
   
   $scope.convertTime = function(time) {
 	  convertedHour = $filter('zpad')($filter('floor')(time/3600), 2);
@@ -72,6 +42,50 @@ angular.module('starter.controllers')
 	  return convertedTime;
   };
   
+    //$scope.Math = window.Math;
+	if ($rootScope.scheduleLoaded == true) {
+		$scope.weekdays = $rootScope.weekdays;
+		for (i = 0; i < $scope.weekdays.slot.length; i++) { 
+			var intervalTemp = $scope.weekdays.slot[i].interval;
+			for (j = 0; j < intervalTemp.length; j++) { 
+			  intervalTemp[j].start_time_temp = $scope.convertTime(intervalTemp[j].start_time);
+			  intervalTemp[j].end_time_temp = $scope.convertTime(intervalTemp[j].end_time);
+			}
+		}
+		console.log('Read from cache', $scope.weekdays);
+	}
+	else {
+		data = JSON.stringify({uid:$rootScope.loginstatus.uid});
+		var url = 'http://www.massagepanda.us/manager/getSchedule';
+
+		var res = $http.post(url, data, {responseType: 'arraybuffer'});
+		res.success(function(data) {
+			cache = $rootScope.getProto(1).decode(data);
+			console.log('Read from server', cache);
+			if (cache.slot.length!==0)	$scope.weekdays = cache;
+			else $scope.weekdays = weekdaysTest;
+			console.log('Schedule list', $scope.weekdays);
+			//process integer interval time and output date object to temp
+			for (i = 0; i < $scope.weekdays.slot.length; i++) { 
+				var intervalTemp = $scope.weekdays.slot[i].interval;
+				for (j = 0; j < intervalTemp.length; j++) { 
+				  intervalTemp[j].start_time_temp = $scope.convertTime(intervalTemp[j].start_time);
+				  intervalTemp[j].end_time_temp = $scope.convertTime(intervalTemp[j].end_time);
+				}
+			}
+			$rootScope.scheduleLoaded = true;
+			$rootScope.weekdays = $scope.weekdays;			
+		});
+		res.error(function(data, status, headers, config) {
+			alert( "failure message: " + JSON.stringify({data: data}));
+		});
+	}
+	
+  /*$http.get('http://www.massagepanda.us/manager/getSchedule').success(function(data) { 
+	$scope.weekdays = data; 
+	console.log('Schedule', data);
+  });*/
+  
   $scope.editmode = function() {
     $state.go('app.editschedule');
   };
@@ -89,7 +103,8 @@ angular.module('starter.controllers')
 	});
 
 	var intervalValid = true;
-	var intervalTemp = $scope.weekdays.slot[$scope.dayId].interval;
+	//var intervalTemp = JSON.parse(JSON.stringify($scope.weekdays.slot[$scope.dayId].interval));
+	var intervalTemp = angular.copy($scope.weekdays.slot[$scope.dayId].interval);
 	for (i = 0; i < intervalTemp.length; i++) {
 		if (intervalTemp[i].start_time_temp === undefined || intervalTemp[i].end_time_temp === undefined) {intervalValid = false; break;}
 		if (intervalTemp[i].start_time_temp >= intervalTemp[i].end_time_temp) {intervalValid = false; break;}
@@ -111,12 +126,13 @@ test: if (intervalValid && (!test)){
 		for (i = 0; i < intervalTemp.length; i++) {
 			delete intervalTemp[i]["start_time_temp"];
 			delete intervalTemp[i]["end_time_temp"];
+			delete intervalTemp[i]["$$hashKey"];
 		}
 	
 		//construct json to be sent to the server
-		updateData = {
+		var updateData = {
 			uid:$rootScope.loginstatus.uid,
-			schedule:{
+			schedule_list:{
 				slot:[
 					{
 						status: $scope.weekdays.slot[$scope.dayId].status,
@@ -130,17 +146,31 @@ test: if (intervalValid && (!test)){
 		console.log(updateData);
 		//break test;
 		
+		//json to protobuf: ERROR!!
+		/*protoSchedule = $rootScope.getProto(1);		
+		var cache = new protoSchedule(updateData.schedule_list);
+		var byteBuffer = cache.encode();
+		var buffer = byteBuffer.toArrayBuffer();
+		
+		updateData.schedule_list = buffer;*/
+		
 		var url = 'http://www.massagepanda.us/manager/updateSchedule';
 
 		var res = $http.post(url, JSON.stringify(updateData), {responseType: 'json'});
+		//var res = $http.post(url, JSON.stringify(updateData), {responseType: 'json'});
 		res.success(function(data) {
 			//$scope.updateResult = $rootScope.getProto(1).decode(data);
 			console.log('Update Result', data);
+			if (data.status == "success") {
+				$scope.weekdays.slot[$scope.dayId].interval = intervalTemp;
+				$state.go('app.editschedule');
+			}
+			
 		});
 		res.error(function(data, status, headers, config) {
-			alert( "failure message: " + JSON.stringify({data: data}));
+			$cordovaDialogs.alert( "failure message: " + JSON.stringify({data: data}), "Error");
 		});
-		$state.go('app.editschedule');
+
 	}
 	else $cordovaDialogs.alert("There is conflict in the schedule!", "Error"); //navigator.notification
   };

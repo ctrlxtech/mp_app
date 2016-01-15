@@ -165,7 +165,7 @@ angular.module('starter.controllers', [])
   };
 
   $rootScope.getProto = function(type) {
-	var builder = dcodeIO.ProtoBuf.loadProtoFile("https://raw.githubusercontent.com/ctrlxtech/mp_ui/master/protobuf/therapist.proto?token=AHZIC7p81yRMte0V-3ND2qXG2w5Q6Mi9ks5Waig8wA%3D%3D");
+	var builder = dcodeIO.ProtoBuf.loadProtoFile("https://raw.githubusercontent.com/ctrlxtech/mp_ui/master/protobuf/therapist.proto?token=AHZICztBIedbLOqFXhYuUG8Gw74X9Kfuks5Wne5WwA%3D%3D");
 	var proto = builder.build("massagepanda");
 	switch(type) {
     case 0:
@@ -181,6 +181,49 @@ angular.module('starter.controllers', [])
 	return ProtoList;
   };
 	
+  $rootScope.getFusionUrl = function(zipcode) {
+	
+	var query = "SELECT geometry FROM " +
+		"1Lae-86jeUDLmA6-8APDDqazlTOy1GsTXh28DAkw" + " WHERE ZIP = " + zipcode;
+	var encodedQuery = encodeURIComponent(query);
+
+	var url = "https://www.googleapis.com/fusiontables/v2/query";
+	url += "?sql=" + encodedQuery;
+	url += "&key=AIzaSyBXJDMiaMdXj9e49HQGawt1i5CItAvLo_A";
+	console.log(url);
+	
+	return url;
+  };
+
+  $rootScope.getMapSrc = function(data, state, zipcode) {
+	var mapJson = data.rows[0][0].geometry; 
+	//console.log('Map Json', $scope.mapJson);
+
+	var pathParameter = "&path=fillcolor:0xAA000033|color:0xFFFFFF00";
+	var coordinates = mapJson.coordinates[0];
+	for (i = 0; i < coordinates.length; i++) {
+		pathParameter += "|" + coordinates[i][1] + "," + coordinates[i][0];
+	}
+
+	var src = "https://maps.googleapis.com/maps/api/staticmap?center=" + state + "+" + zipcode + "&zoom=11&size=600x300&maptype=roadmap&key=AIzaSyDG4sCXrk0S3UVEdpwfm-YQYKWK_YJ3XX0";
+
+	src += pathParameter;
+	console.log(src);	
+	return src;
+  };
+  
+  $rootScope.convertLong = function(num) {
+		//console.log(num);
+		if (num){
+			var longNum = new dcodeIO.Long(num.low, num.high, num.unsigned);
+			return longNum.toString();
+		}
+		else{
+			//console.log('Loading');
+			return 'Loading';
+		}
+	};
+  
 })
 
 .controller('LoginCtrl', function($rootScope, $scope, $timeout, $state, $http, $localstorage) {
@@ -329,25 +372,11 @@ angular.module('starter.controllers', [])
 	
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-})
-
 .controller('DetailCtrl', function ($scope, $stateParams) {
     $scope.orderId = $stateParams.orderId;
 })
 
-.controller('RequestCtrl', function($scope, $timeout, $state, $ionicModal) {
+.controller('RequestCtrl', function($rootScope, $scope, $timeout, $state, $ionicModal, $http) {
 	
   $ionicModal.fromTemplateUrl('templates/newOrder-modal.html', {
     scope: $scope
@@ -357,11 +386,12 @@ angular.module('starter.controllers', [])
   
   $scope.closeOrder = function() {	  
 	$timeout(function() {
+		$scope.modalShow = false;
 		$scope.modal.hide();
 	}, 500);
   };
   
-  $scope.requestlist = [
+/*  $scope.requestlist = [
     { 
 		id: 1,
 		date: '1442370600000',
@@ -373,33 +403,67 @@ angular.module('starter.controllers', [])
 		address: '123 Castro St',
 		earn: 50,
 		status: 'Done'
-	},
-    { 
-		id: 2,
-		date: '1442527200000',
-		duration: 90,
-		type: 'Deep Tissue',
-		city: 'San Francisco',
-		state: 'CA',
-		zipcode: '94102',
-		address: '456 Market St',
-		earn: 80,
-		status: 'Done'
-	}
-		
-  ];
+	}		
+  ]; */
 
   $scope.openOrder = function(index) {
 	console.log('Open Order', index);
 	$scope.orderId = index;
 
     $timeout(function() {
+	  	//show map
+		state = $scope.requestlist.order[index].address.state;
+		zipcode = $scope.requestlist.order[index].address.zipcode;
+		
+		var url = $rootScope.getFusionUrl(zipcode);
+	
+		$http.get(url).success(function(data) { 
+			var src = $rootScope.getMapSrc(data, state, zipcode);
+			$scope.src = src;
+		});
+		
 	// Open the new order modal
       $scope.modal.show();
     }, 500);
 
   };
+
+	$scope.nameStyle = [];
+	$scope.viewedStyle = [];
+	$scope.leftbarStyle = [];
+	
+	//data = {uid:$rootScope.loginstatus.uid};
+	data = JSON.stringify({uid:$rootScope.loginstatus.uid});
+	console.log(data);
   
+  	var url = 'http://www.massagepanda.us/manager/getRequestlist';
+
+	var res = $http.post(url, data, {responseType: 'arraybuffer'});
+	res.success(function(data) {
+		$scope.requestlist = $rootScope.getProto(0).decode(data);
+		$scope.requestlist.order.sort(function(a, b) {
+			return $rootScope.convertLong(b.creation_time) - $rootScope.convertLong(a.creation_time);
+		});
+		for (i = 0; i < $scope.requestlist.order.length; i++) {
+			//$scope.requestlist.order[i].creation_time = $rootScope.convertLong($scope.requestlist.order[i].creation_time); 
+			//console.log($scope.requestlist.order[i].creation_time);
+			if ($scope.requestlist.order[i].order_status == 0) {
+				$scope.leftbarStyle[i] = {'background': '#E87'};
+				$scope.nameStyle[i] = {'font-weight': '500', 'color': '#000'};
+				$scope.viewedStyle[i] = {'color': '#000'};
+			}
+			else{
+				$scope.leftbarStyle[i] = {'background': '#69F', 'opacity': '0.8'};
+			}
+		}
+		console.log('Request list', $scope.requestlist);
+	});
+	res.error(function(data, status, headers, config) {
+		alert( "failure message: " + JSON.stringify({data: data}));
+	});
+		
+	$scope.convertLongDate = $rootScope.convertLong;
+	
 })
 
 .controller('HistoryCtrl', function($rootScope, $scope, $stateParams, $http) {
@@ -431,19 +495,21 @@ angular.module('starter.controllers', [])
 	res.error(function(data, status, headers, config) {
 		alert( "failure message: " + JSON.stringify({data: data}));
 	});
-		
-	$scope.convertLongDate = function(date) {
-		//console.log(date);
-		if (date){
-			var longDate = new dcodeIO.Long(date.low, date.high, date.unsigned);
-			//console.log(longDate.toString());
-			return longDate.toString();
-		}
-		else{
-			//console.log('Loading');
-			return 'Loading';
-		}
-	};
 	
 	$scope.orderId = $stateParams.orderId;
+	$scope.convertLongDate = $rootScope.convertLong;
+	
+	//show map
+	if ($stateParams.orderId!==undefined) {
+		state = "CA";
+		zipcode = 94043;
+		
+		var url = $rootScope.getFusionUrl(zipcode);
+	
+		$http.get(url).success(function(data) { 
+			var src = $rootScope.getMapSrc(data, state, zipcode);
+			$scope.src = src;
+		});
+	};
+	
 });

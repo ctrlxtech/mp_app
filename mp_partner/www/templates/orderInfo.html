@@ -1,5 +1,11 @@
 <div style="display: block; width: 100%; padding:10px; font-size: initial; color: #444; line-height:24px;">
-	<img src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&key=AIzaSyDG4sCXrk0S3UVEdpwfm-YQYKWK_YJ3XX0" width="100%" /> 
+	<!--<img ng-src="https://maps.googleapis.com/maps/api/staticmap?center={{orderinfo.address.state}}+{{orderinfo.address.zipcode}}&zoom=13&size=600x300&maptype=roadmap&key=AIzaSyDG4sCXrk0S3UVEdpwfm-YQYKWK_YJ3XX0" width="100%" /> -->
+
+	<img id="map" ng-src="{{mapSrc}}" width="100%"/>
+	
+	<div>
+		<span style="">ID: </span> <span style="float:right">{{orderinfo.external_id}}</span>
+	</div>
 	<div>
 		<span style="">Date: </span> <span style="float:right">{{convertDate({date:orderinfo.service_time}) | date: 'fullDate'}}</span>
 	</div>
@@ -22,6 +28,14 @@
 		<span style="">Earn: </span> <span style="float:right">${{orderinfo.earn}}</span>
 	</div>
 	<div>
-		<span style="">Status: </span> <span style="float:right">{{orderinfo.order_status}}</span>
+		<span style="">Status: </span> <span style="float:right" ng-switch="orderinfo.order_status">
+			<span ng-switch-when="0">Pending</span>
+			<span ng-switch-when="1">Confirmed</span>
+			<span ng-switch-when="2">Checked-in</span>
+			<span ng-switch-when="3">Cancelled</span>
+			<span ng-switch-when="4">Paid</span>
+			<span ng-switch-when="5">Paid</span>
+			<span ng-switch-when="6">Cancelled</span>
+		</span>
 	</div>
 </div>

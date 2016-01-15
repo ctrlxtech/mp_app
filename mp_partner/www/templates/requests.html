@@ -1,13 +1,21 @@
 <ion-view view-title="Requests">
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="request in requestlist" class="item-icon-right" ng-click="openOrder($index)">
-        <div style="display: inline-block; width: 100%;">
-			<span style="float:left">{{request.date | date: 'shortDate'}}</span>
-			<span style="float:right">${{request.earn}}</span>
+      <ion-item ng-repeat="request in requestlist.order | limitTo: 10" class="item" ng-click="openOrder($index)" style="padding:0px;"> <!--class="item-icon-right" -->
+		<div style="position: absolute; top: 0; bottom: 0; width: 5px; float: left;" ng-style="leftbarStyle[$index]">
 		</div>
-		<div>{{request.city}}</div>
-		<i class="icon ion-chevron-right icon-accessory" style=""></i>
+        <div style="padding:16px; width: 100%;">
+			<div style="display: inline-block; width: 80%; padding-left: 5px;">
+				<span style="float:left;font-size: 19px;" ng-style="nameStyle[$index]">{{request.customer_name}}.</span></br>
+				<span style="font-size: 14px;" ng-style="viewedStyle[$index]">{{request.service_type}} - {{request.address.city}}</span></br>
+				<span style="font-size: 14px; color: #888;">{{convertLongDate(request.service_time) | date: 'MM/dd hh:mm a'}}, {{request.service_duration}} minutes</span>	
+			</div>
+			<div style="display: inline; width: 20%;float: right;text-align: right;" ng-style="viewedStyle[$index]">
+				<span style="font-size: 13px;">{{convertLongDate(request.creation_time) | date: 'MM/dd'}}</span></br>
+				<span style="font-size: 12px;vertical-align: super;">$</span><span style="font-size: 19px;">{{request.earn}}</span>
+			</div>
+		</div>
+		<!-- <i class="icon ion-chevron-right icon-accessory" style=""></i> -->
       </ion-item>
     </ion-list>
   </ion-content>

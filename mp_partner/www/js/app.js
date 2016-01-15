@@ -128,16 +128,6 @@ angular.module('starter', ['ionic','ionic.service.core','ionic.service.push','ng
 		  controller: 'ScheduleCtrl'
         }
       }
-    })
-	
-   .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
     });
 	
   // if none of the above states are matched, use this as the fallback
