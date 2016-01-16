@@ -1,13 +1,19 @@
 <ion-view view-title="Schedule" cache-view="false">
     <ion-nav-buttons side="right">
-      <button class="button button-icon button-clear" ng-click="editmode()">
-        Edit
+      <button class="button button-icon button-clear" ng-click="editMode ? doneEdit():switchEdit()">
+        {{editMode ? 'Done':'Edit'}}
       </button>
 	  <!--<a href="#/app/editschedule">Edit</a>-->
     </ion-nav-buttons>
   <ion-content>
-	<ion-toggle ng-repeat="slot in weekdays.slot" ng-model="slot.status" toggle-class="icon" class="item-icon-right toggle-middle">
+	<ion-toggle id="" ng-repeat="slot in weekdays.slot" ng-model="slot.status" toggle-class="icon" class="item-icon-right toggle-middle" ng-style="editMode? {'display':'none'}:{'display':''}" style="padding-right: 54px;">
 		<day-schedule info="slot"></day-schedule>
 	</ion-toggle>
+	<ion-item ng-repeat="slot in weekdays.slot" ng-href="#/app/editschedule/{{$index}}" class="item-remove-animate item-icon-right" ng-style="editMode? {'display':''}:{'display':'none'}">
+		<div style="width: 100%;">
+			<day-schedule info="slot" style="display: inline;"></day-schedule>
+			<i class="icon ion-chevron-right icon-accessory" style=""></i>
+		</div>
+	</ion-item >
   </ion-content>
 </ion-view>

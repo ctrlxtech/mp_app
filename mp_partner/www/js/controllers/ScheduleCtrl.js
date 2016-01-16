@@ -3,27 +3,7 @@ angular.module('starter.controllers')
 .controller('ScheduleCtrl', function($rootScope, $scope, $state, $stateParams, $http, $filter, $cordovaDialogs) {
 	  
   $scope.dayId = $stateParams.dayId;
-  
-  weekdaysTest = {
-	slot:[ 
-	   { 
-		  day: 0,
-		  interval: [
-			{
-			  start_time:54000,
-			  end_time:57600
-			}
-		  ],
-		  status: true 
-		},
-		{
-		  day: 1, 
-		  interval: [
-		  ],
-		  status: false 
-		}
-    ]
-  };
+  $scope.editMode = false;
   
   $scope.convertTime = function(time) {
 	  convertedHour = $filter('zpad')($filter('floor')(time/3600), 2);
@@ -62,8 +42,20 @@ angular.module('starter.controllers')
 		res.success(function(data) {
 			cache = $rootScope.getProto(1).decode(data);
 			console.log('Read from server', cache);
+			$scope.weekdays = {slot:[]};
 			if (cache.slot.length!==0)	$scope.weekdays = cache;
-			else $scope.weekdays = weekdaysTest;
+						
+			//For first time user; fill the empty day slot
+			for (i = 0; i < 7; i++) {
+				if ($scope.weekdays.slot.length <= i || $scope.weekdays.slot[i].day !== i) {
+					$scope.weekdays.slot.splice( i, 0, {
+						day: i,
+						interval: [],
+						status: false 
+					});
+				}
+			}
+			
 			console.log('Schedule list', $scope.weekdays);
 			//process integer interval time and output date object to temp
 			for (i = 0; i < $scope.weekdays.slot.length; i++) { 
@@ -86,8 +78,13 @@ angular.module('starter.controllers')
 	console.log('Schedule', data);
   });*/
   
-  $scope.editmode = function() {
-    $state.go('app.editschedule');
+  $scope.switchEdit = function() {
+    //$state.go('app.editschedule');
+	$scope.editMode = true;
+  };
+  
+  $scope.doneEdit = function() {
+    $scope.editMode = false;
   };
   
   $scope.checkInterval = function(interval){
@@ -163,7 +160,7 @@ test: if (intervalValid && (!test)){
 			console.log('Update Result', data);
 			if (data.status == "success") {
 				$scope.weekdays.slot[$scope.dayId].interval = intervalTemp;
-				$state.go('app.editschedule');
+				$state.go('app.schedule');
 			}
 			
 		});

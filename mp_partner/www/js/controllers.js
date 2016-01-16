@@ -428,6 +428,34 @@ angular.module('starter.controllers', [])
 
   };
 
+  $scope.acceptOrder = function() {
+	
+	data = JSON.stringify(
+		{
+			request:
+			{
+				user_id: $rootScope.loginstatus.uid, 
+				order_id: $scope.requestlist.order[$scope.orderId].id,
+				action: 0
+			}
+		});
+		
+	console.log(data);
+	
+	var url = 'http://www.massagepanda.us/manager/action';
+	
+	var res = $http.post(url, data, {responseType: 'json'});
+	res.success(function(data) {
+		//alert("Order confirmed!");
+		console.log(data);
+		$scope.closeOrder();
+	});
+	res.error(function(data, status, headers, config) {
+		alert( "failure message: " + JSON.stringify({data: data}));
+	});
+	
+  };
+  
 	$scope.nameStyle = [];
 	$scope.viewedStyle = [];
 	$scope.leftbarStyle = [];
