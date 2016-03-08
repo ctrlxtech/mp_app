@@ -8,10 +8,10 @@
 		<div class="item item-divider">Current Service</div>
 		<div class="item item-body">
 			<div style="line-height:27px;">
-			John D. </br>
-			Nov 19, 6pm</br>
-			2250 3rd St, San Francisco, CA 94107</br>
-			Deep Tissue Massage for 1 Hour</br>
+			{{request.customer_name}}.</br>
+			{{convertLongDate(request.service_time) | date: 'MM/dd hh:mm a'}}</br>
+			{{request.address.address_line}}, {{request.address.city}}, {{request.address.state}} {{request.address.zipcode}}</br>
+			{{request.service_type}} for {{request.service_duration/60}} Hour(s)</br>
 			</div>
 		</div>
 		<!--<a class="item item-icon-left positive" href="#" ng-click="doCheckout()" >

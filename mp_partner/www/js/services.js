@@ -1,5 +1,86 @@
 angular.module('starter.services', [])
 
+/*.service('PUSH_NOTIFICATIONS', function($http, $ionicPlatform, $cordovaDevice, $q){
+
+var _registered = false, _inprogress = false, _push, _gcm_id, _device;
+
+this.init = function(){
+    _inprogress = true;
+    $ionicPlatform.ready(function(){
+
+        // If already registered or not signed in
+
+        if(_registered || ['Android','iOS'].indexOf($cordovaDevice.getPlatform()) == -1) return; // Ensure that we're running on Android or iOS
+
+        // Push Notifications Init
+
+        var push = PushNotification.init({
+            android: {
+                senderID: "1234567890" // GCM Sender ID (project ID)
+            },
+            ios: {
+                alert: "true",
+                badge: "true",
+                sound: "false",
+                senderID: "1234567890" // GCM Sender ID (project ID)
+            }
+        });
+		
+        _push = push;
+
+        push.on('registration', function(data){
+            _gcm_id = data.registrationId;
+
+            // Post our GCM and device information to our API
+            $http.post('http://MYAPIURL.com/registerpn', {
+                gcm_id: data.registrationId,
+                device: $cordovaDevice.getDevice()
+            }).then(
+                function(res){
+                    console.log("Registered on API...");
+                    _registered = true;
+                    _inprogress = false;
+                },
+                function(err){
+                    console.log("error registering for PN", err);
+                    _inprogress = false;
+                }
+            );
+        });
+
+        push.on('notification', function(data){
+            // Here is what we will do if we get a push notification while using the app
+            console.log("GOT PN", data);
+        });
+
+        push.on('error', function(err){
+            console.log("PNR Error", err);
+        });
+    });
+
+
+
+};
+this.unregister = function(){
+    return $q(function(resolve, reject){
+        _push.unregister();
+        return $http.post('http://MYAPIURL.COM/unregisterpn', {device: _device, gcm_id: _gcm_id})
+            .then(
+                function(success){
+                    _registered = false;
+                    resolve();
+                },
+                function(err){
+                    // We didn't manage to inform the server that we unregistered
+                    console.log("Error unregistering");
+                    resolve();
+                }
+            );
+    });
+};
+})
+*/
+
 .factory('$localstorage', ['$window', function($window) {
   return {
     set: function(key, value) {

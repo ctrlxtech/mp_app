@@ -4,7 +4,8 @@ package massagepanda.therapist;
 
 message OrderList {
   message Order {
-    required int64 id = 1;
+    required string id = 1;
+    required string external_id = 10; // used in UI display
     required int64 service_time = 2; // in milliseconds
     required int32 service_duration = 3; // in minutes
     required string service_type = 4;
@@ -31,6 +32,9 @@ message OrderList {
     }
 
     required Address address = 7;
+
+    required string customer_name = 9;
+    required int64 creation_time = 8; // in milliseconds
   }
 
   repeated Order order = 1;
@@ -39,8 +43,8 @@ message OrderList {
 message Schedule {
   message Slot {
     enum Status {
-      ACTIVE = 0;
-      INACTIVE = 1;
+      INACTIVE = 0;
+      ACTIVE = 1;
     }
     
     required Status status = 1 [default = INACTIVE];
@@ -58,8 +62,8 @@ message Schedule {
     required Day day = 2;
 
     message Interval {
-      required int64 start_time = 1; // in milliseconds
-      required int64 end_time = 2; // in milliseconds
+      required int32 start_time = 1; // in seconds
+      required int32 end_time = 2; // in seconds
     }
 
     repeated Interval interval = 3;
@@ -70,7 +74,7 @@ message Schedule {
 
 message ActionRequest {
   required string user_id = 1;
-  required int64 order_id = 2;
+  required string order_id = 2;
  
   enum Action {
     ACCEPT_ORDER = 0;

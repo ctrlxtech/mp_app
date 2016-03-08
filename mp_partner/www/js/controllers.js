@@ -1,6 +1,9 @@
 angular.module('starter.controllers', [])
 
-.controller('TestCtrl', function($scope, $rootScope, $ionicUser, $ionicPush, $log, $window, restful_send, $http) {
+.controller('TestCtrl', function($scope, $rootScope, $ionicUser, $log, $window, restful_send, $http) {
+    
+  $scope.token = $rootScope.token;
+  
   // Identifies a user with the Ionic User service
   $scope.doGetData = function() {
     $window.console.log("enter getData");
@@ -12,7 +15,7 @@ angular.module('starter.controllers', [])
         "tokens":[
           $rootScope.token
         ],
-		"debug": true,
+		//"debug": true,
         "notification":{
           "alert":"Hello !",
         }
@@ -73,6 +76,11 @@ angular.module('starter.controllers', [])
     });
   };*/
 
+  $scope.pushUnregister = function() {
+	  //push.unregister();
+	  alert($rootScope.token);
+  }
+  
   $scope.pushNewOrder = function() {
 	console.log("push new order");
     console.log($rootScope.token);
@@ -112,6 +120,7 @@ angular.module('starter.controllers', [])
     $log.info('Ionic Push: Got token ', data.token, data.platform);
     $scope.token = data.token;
   });*/
+
 })
 
 .controller('AppCtrl', function($rootScope, $scope, $ionicModal, $timeout, $state, $http) {
@@ -165,7 +174,7 @@ angular.module('starter.controllers', [])
   };
 
   $rootScope.getProto = function(type) {
-	var builder = dcodeIO.ProtoBuf.loadProtoFile("https://raw.githubusercontent.com/ctrlxtech/mp_ui/master/protobuf/therapist.proto?token=AHZICztBIedbLOqFXhYuUG8Gw74X9Kfuks5Wne5WwA%3D%3D");
+	var builder = dcodeIO.ProtoBuf.loadProtoFile("model/therapist.proto");
 	var proto = builder.build("massagepanda");
 	switch(type) {
     case 0:
@@ -260,10 +269,11 @@ angular.module('starter.controllers', [])
 			$scope.errshow = false;
 			$scope.loginData = {username : $localstorage.get('username'),password : ''};
 			
-			Ionic.io();
+		
+			/*Ionic.io();
 
 			var push = new Ionic.Push({
-			  "debug": true,
+			  //"debug": true,
 			  "onNotification": function(notification) {
 				var payload = notification.payload;
 				console.log(notification, payload);
@@ -298,7 +308,8 @@ angular.module('starter.controllers', [])
 			user.set('name', $scope.loginData.username);
 			user.set('bio', 'test account');
 			//user.save();
-
+			
+			alert("test");
 			push.register(function(token) {
 			  // Log out your device token (Save this!)
 			  console.log("Got Token:",token.token);
@@ -306,7 +317,10 @@ angular.module('starter.controllers', [])
 			  push.addTokenToUser(user);
 			  user.save();
 			});
-			  
+			
+			alert("push register successful");*/
+			
+			
 			// Simulate a login delay. Remove this and replace with your login
 			$timeout(function() {
 			  $state.go('app.home');
@@ -335,22 +349,63 @@ angular.module('starter.controllers', [])
 
   // Triggered in the working modal to close it
   $scope.doCheckout = function() {	  
-	console.log('Doing Checkout');
+
+	data = JSON.stringify(
+		{
+			uid: $rootScope.loginstatus.uid, 
+			order_id: $scope.request.id,
+			action: 2
+		});
+		
+	console.log('Doing Checkout', data);
 	
-    $timeout(function() {
-		$scope.modal.hide();
-	}, 500);
+	var url = 'http://www.massagepanda.us/manager/action';
+	
+	var res = $http.post(url, data, {responseType: 'json'});
+	res.success(function(data) {
+		if (data.status === "success") {
+			
+			$timeout(function() {
+			  $scope.modal.hide();
+			}, 500);
+		}
+		console.log(data);
+	});
+	res.error(function(data, status, headers, config) {
+		alert( "failure message: " + JSON.stringify({data: data}));
+	});
+	
   };
   
-  $scope.checkInData = {};
-  
   $scope.doCheckin = function() {
-    console.log('Doing Checkin', $scope.checkInData);
-
-    $timeout(function() {
-	// Open the working modal
-      $scope.modal.show();
-    }, 500);
+    
+	data = JSON.stringify(
+		{
+			uid: $rootScope.loginstatus.uid, 
+			order_id: $scope.request.id,
+			action: 1
+		});
+		
+	console.log('Doing Checkin', data);
+	
+	var url = 'http://www.massagepanda.us/manager/action';
+	
+	var res = $http.post(url, data, {responseType: 'json'});
+	res.success(function(data) {
+		if (data.status === "success") {
+			//alert("Checked In!");
+			
+			$timeout(function() {
+			// Open the working modal
+			  $scope.modal.show();
+			}, 500);
+		}
+		console.log(data);
+	});
+	res.error(function(data, status, headers, config) {
+		alert( "failure message: " + JSON.stringify({data: data}));
+	});
+	
   };
   
   $scope.doAlert = function() {
@@ -362,21 +417,63 @@ angular.module('starter.controllers', [])
        template: 'We are going to report the emercency to our operator. Do you want to proceed?'
      }).then(function(res) { 
 		 if(res) {
-			console.log('Emergency reported');   
+			data = JSON.stringify(
+				{
+					uid: $rootScope.loginstatus.uid, 
+					order_id: $scope.request.id,
+					action: 3
+				});
+				
+			console.log('Doing Checkout', data);
+			
+			var url = 'http://www.massagepanda.us/manager/action';
+			
+			var res = $http.post(url, data, {responseType: 'json'});
+			res.success(function(data) {
+				if (data.status === "success") {
+					console.log('Emergency reported');
+				}
+				console.log(data);
+			});
+			res.error(function(data, status, headers, config) {
+				alert( "failure message: " + JSON.stringify({data: data}));
+			});			
 		 }
 		 else {
 			return;
 		}
     });
   };
+
+  	data = JSON.stringify({uid:$rootScope.loginstatus.uid});
+	console.log(data);
+  
+  	var url = 'http://www.massagepanda.us/manager/getRequestlist';
+
+	var res = $http.post(url, data, {responseType: 'arraybuffer'});
+	res.success(function(data) {
+		$scope.requestlist = $rootScope.getProto(0).decode(data);
+		var confirmedlist = $scope.requestlist.order.filter(function (el) {
+			return el.order_status == 1;
+		});
+		console.log('Confirmed list', confirmedlist);
+		confirmedlist.sort(function(a, b) {
+			return $rootScope.convertLong(b.service_time) - $rootScope.convertLong(a.service_time);
+		});
+		$scope.request = confirmedlist[0];
+	});
+	res.error(function(data, status, headers, config) {
+		alert( "failure message: " + JSON.stringify({data: data}));
+	});
 	
+	$scope.convertLongDate = $rootScope.convertLong;
 })
 
 .controller('DetailCtrl', function ($scope, $stateParams) {
     $scope.orderId = $stateParams.orderId;
 })
 
-.controller('RequestCtrl', function($rootScope, $scope, $timeout, $state, $ionicModal, $http) {
+.controller('RequestCtrl', function($rootScope, $scope, $timeout, $state, $ionicModal, $http, $localstorage) {
 	
   $ionicModal.fromTemplateUrl('templates/newOrder-modal.html', {
     scope: $scope
@@ -422,8 +519,12 @@ angular.module('starter.controllers', [])
 			$scope.src = src;
 		});
 		
-	// Open the new order modal
-      $scope.modal.show();
+		$localstorage.set($scope.requestlist.order[index].id, true);
+		$scope.nameStyle[index] = {};
+		$scope.viewedStyle[index] = {};
+		
+		// Open the new order modal
+		$scope.modal.show();  
     }, 500);
 
   };
@@ -432,12 +533,9 @@ angular.module('starter.controllers', [])
 	
 	data = JSON.stringify(
 		{
-			request:
-			{
-				user_id: $rootScope.loginstatus.uid, 
-				order_id: $scope.requestlist.order[$scope.orderId].id,
-				action: 0
-			}
+			uid: $rootScope.loginstatus.uid, 
+			order_id: $scope.requestlist.order[$scope.orderId].id,
+			action: 0
 		});
 		
 	console.log(data);
@@ -446,9 +544,11 @@ angular.module('starter.controllers', [])
 	
 	var res = $http.post(url, data, {responseType: 'json'});
 	res.success(function(data) {
-		//alert("Order confirmed!");
+		if (data.status === "success") {
+			alert("Order confirmed!");
+			$scope.closeOrder();
+		}
 		console.log(data);
-		$scope.closeOrder();
 	});
 	res.error(function(data, status, headers, config) {
 		alert( "failure message: " + JSON.stringify({data: data}));
@@ -475,13 +575,16 @@ angular.module('starter.controllers', [])
 		for (i = 0; i < $scope.requestlist.order.length; i++) {
 			//$scope.requestlist.order[i].creation_time = $rootScope.convertLong($scope.requestlist.order[i].creation_time); 
 			//console.log($scope.requestlist.order[i].creation_time);
+			
 			if ($scope.requestlist.order[i].order_status == 0) {
 				$scope.leftbarStyle[i] = {'background': '#E87'};
-				$scope.nameStyle[i] = {'font-weight': '500', 'color': '#000'};
-				$scope.viewedStyle[i] = {'color': '#000'};
 			}
 			else{
 				$scope.leftbarStyle[i] = {'background': '#69F', 'opacity': '0.8'};
+			}
+			if ($localstorage.get($scope.requestlist.order[i].id) !== 'true') {
+				$scope.nameStyle[i] = {'font-weight': '500', 'color': '#000'};
+				$scope.viewedStyle[i] = {'color': '#000'};
 			}
 		}
 		console.log('Request list', $scope.requestlist);
@@ -518,6 +621,9 @@ angular.module('starter.controllers', [])
 		//var bb = new dcodeIO.ByteBuffer();
 		//bb = dcodeIO.ByteBuffer.wrap(data, "binary");
 		$scope.orderlist = $rootScope.getProto(0).decode(data);
+		$scope.orderlist.order.sort(function(a, b) {
+			return $rootScope.convertLong(b.service_time) - $rootScope.convertLong(a.service_time);
+		});
 		console.log('Order list', $scope.orderlist);
 	});
 	res.error(function(data, status, headers, config) {

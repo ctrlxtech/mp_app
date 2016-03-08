@@ -1,6 +1,6 @@
 <ion-view view-title="Test">
   <ion-content>
-    <p>get data from server</p>
+    <p>get token from ionic push server</p>
        {{token}}
     <button class="button button-block button-dark" ng-click="doGetData()">
       getServerData
@@ -17,6 +17,11 @@
     <button class="button button-block button-positive" ng-if="identified" ng-click="pushRegister()">
       AcceptTicket
     </button>
+	
+	<button class="button button-block button-positive" ng-click="pushUnregister()">
+      Show Token
+    </button>
+	
 	<div>{{token}}</div>
   </ion-content>
 </ion-view>
